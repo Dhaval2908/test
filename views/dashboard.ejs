@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/tailwingdcss@^1.0/dist/tailwind.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    #btn {
+      margin-top: 10px;
+      padding: 2px;
+      font-size: 10px;
+      border: none;
+      background-color: rgba(8, 158, 8, 0.767);
+      height: 25px;
+      width: 50px;
+      font-family: cursive;
+      box-shadow: 3px 3px 2px rgba(48, 230, 48, 0.87);
+
+
+    }
+
+    #btn:hover {
+      background-color: rgb(24, 153, 24);
+      box-shadow: 3px 3px 2px rgba(1, 61, 1, 0.8);
+
+    }
+
+    #btn::active {
+      background-color: green;
+      box-shadow: 3px 3px 2px rgba(0, 150, 0, .8);
+    }
+    #btn-off {
+      margin-top: 10px;
+      padding: 2px;
+      font-size: 10px;
+      border: none;
+      background-color: rgba(255, 0, 0, 0.788);
+      height: 25px;
+      width: 50px;
+      font-family: cursive;
+      box-shadow: 3px 3px 2px rgb(247, 29, 40);
+
+
+    }
+
+    #btn-off:hover {
+      background-color: red;
+      box-shadow: 3px 3px 2px rgba(107, 0, 0, 0.993);
+
+    }
+
+    #btn-off::active {
+      background-color: red;
+      box-shadow: 3px 3px 2px rgba(102, 1, 1, 0.993);
+    }
+  </style>
+  
+</head>
+
+<body>
+
+  <header class="text-gray-400 bg-gray-900 body-font">
+    <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+      <a class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round"
+          stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
+          viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+        </svg>
+        <span class="ml-3 text-xl">Hydrophonics</span>
+      </a>
+      <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
+        <a class="mr-5 hover:text-white">Schedule</a>
+        <a class="mr-5 hover:text-white">Analysis</a>
+        <a class="mr-5 hover:text-white">Log out</a>
+        <a class="mr-5 hover:text-white"></a>
+      </nav>
+      <form action="dashboard" method="post">
+        <input type="submit"
+          class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0"
+          value="Refresh">
+      </form>
+      <!-- <button class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">Refresh
+            
+            </svg>
+          </button> -->
+    </div>
+  </header>
+  <section class="text-gray-400 bg-gray-900 body-font">
+    <div class="container px-5 py-24 mx-auto">
+      <div class="flex flex-col text-center w-full mb-20">
+        <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">Automated Hydrophonics</h1>
+        <p class="lg:w-2/3 mx-auto leading-relaxed text-base">ABCD</p>
+      </div>
+      <% if(Temp>0){  %>
+        <div class="flex flex-wrap -m-4 text-center">
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+
+              <h2 class="title-font font-medium text-3xl text-white">
+                <%=Temp %>
+              </h2>
+              <p class="leading-relaxed">Temperature</p>
+            </div>
+          </div>
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+
+              <h2 class="title-font font-medium text-3xl text-white">
+                <%=Humidity %>
+              </h2>
+              <p class="leading-relaxed">Humidity</p>
+            </div>
+          </div>
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+
+              <h2 class="title-font font-medium text-3xl text-white">
+                <%=PH %>
+              </h2>
+              <p class="leading-relaxed">PH</p>
+            </div>
+          </div>
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+
+              <h2 class="title-font font-medium text-3xl text-white">
+                <%=EC %>
+              </h2>
+              <p class="leading-relaxed">EC</p>
+            </div>
+          </div>
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+
+              <h2 class="title-font font-medium text-3xl text-white">
+                <%=Time %>
+              </h2>
+              <p class="leading-relaxed">Time</p>
+            </div>
+
+          </div>
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+
+              <h2 class="title-font font-medium text-3xl text-white">
+                <%=Date %>
+              </h2>
+              <p class="leading-relaxed">Date</p>
+            </div>
+
+          </div>
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+              <div>
+                <h2>Control Air Pump</h2>
+                <form action="dashboard" method="post">
+                  <!-- <input type="submit" class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0" value="ON"> -->
+                  <button name="AirPumpON" type="submit" id="btn" value="ON">
+                    ON
+                  </button>
+                  <button name="AirPumpOFF" type="submit" id="btn-off" value="OFF">
+                    OFF
+                  </button>
+                </form>
+              </div>
+              <!-- <h2 class="title-font font-medium text-3xl text-white">
+                <%=Date %>
+              </h2>
+              <p class="leading-relaxed">Air Pump</p> -->
+            </div>
+
+          </div>
+          <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+            <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
+
+              <h2 class="title-font font-medium text-3xl text-white">
+                <%=Fan %>
+              </h2>
+              <p class="leading-relaxed">Fan</p>
+            </div>
+
+          </div>
+        </div>
+        
+          <% } else{ %>
+            <div class="flex flex-wrap -m-4 text-center">
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+
+                  <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
+                  <p class="leading-relaxed">Temperature</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+
+                  <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
+                  <p class="leading-relaxed">Humidity</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+
+                  <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
+                  <p class="leading-relaxed">PH</p>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
+                <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
+
+                  <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
+                  <p class="leading-relaxed">EC</p>
+                </div>
+              </div>
+            </div>
+            <% } %>
+    </div>
+  </section>
+  
+
+</body>
+
+</html>
