@@ -75,7 +75,7 @@ app.post("/test", encoder, function (req, res) {
 })
 app.get("/dashboard", encoder, function (req, res) {
     var date_ob = new Date();
-    let Temp, humidity, time, date, t2, t3
+    let Temp, humidity, time, date, t2, t3,Fan
     client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
         if (error) {
             console.error(error)
@@ -94,11 +94,27 @@ app.get("/dashboard", encoder, function (req, res) {
             console.log(humidity)
 
         }
+        if (Temp > 26) {
+            Fan = "ON"
+            console.log(Fan)
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
+              if (error) {
+                console.error(error)
+              }
+            })
+          }
+          else {
+            Fan = "OFF"
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
+              if (error) {
+                console.error(error)
+              }
+            })
+          }
 
-       
-       
 
-            let day = ("0" + date_ob.getDate()).slice(-2);
+
+        let day = ("0" + date_ob.getDate()).slice(-2);
         let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
         let minute = String(date_ob.getMinutes()).padStart(2, '0');
         time = date_ob.getHours() + ':' + minute + ':' + date_ob.getSeconds();
@@ -107,7 +123,7 @@ app.get("/dashboard", encoder, function (req, res) {
         console.log(date)
         t2 = "53"
         t3 = "54"
-     
+
 
     })
 
@@ -121,7 +137,7 @@ app.get("/dashboard", encoder, function (req, res) {
             EC: t3,
             Time: time,
             Date: date,
-            Fan: "OFF"
+            Fan: Fan
         });
     }, 100)
 
@@ -132,13 +148,13 @@ app.get("/dashboard", encoder, function (req, res) {
 app.post("/dashboard", encoder, function (req, res) {
     var AirPumpON = req.body.AirPumpON;
     var AirPumpOFF = req.body.AirPumpOFF;
-    var Temp, humidity
-    client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
-        if (error) {
-            console.error(error)
-        }
+    
+    // client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
+    //     if (error) {
+    //         console.error(error)
+    //     }
 
-    })
+    // })
     setTimeout(function () {
         console.log(AirPumpON)
         if (AirPumpON) {
@@ -148,6 +164,7 @@ app.post("/dashboard", encoder, function (req, res) {
                     console.error(error)
                 }
             })
+            res.redirect("/dashboard")
 
         }
         if (AirPumpOFF) {
@@ -156,12 +173,14 @@ app.post("/dashboard", encoder, function (req, res) {
                     console.error(error)
                 }
             })
+            res.redirect("/dashboard")
+
         }
 
     }, 500);
 
 
-   
+
 })
 
 

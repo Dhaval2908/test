@@ -25,19 +25,18 @@ client.on('connect', () => {
     console.log(`Subscribe to topic '${topic}'`)
   })
 })
-  
-var flag=0
-var time=0
-var date=0
+
+var flag = 0
+var time = 0
+var date = 0
 cron.schedule('0 */5 * * * *', () => {
-   console.log("Calling")
+  console.log("Calling")
   //  '0 */5 * * * *
-    getdata();
-    
+  getdata();
+
 });
-var Temp,humidity
-function getdata()
-{
+var Temp, humidity
+function getdata() {
   client.publish(topic, "1", { qos: 0, retain: false }, (error) => {
     if (error) {
       console.error(error)
@@ -45,34 +44,45 @@ function getdata()
   })
 
 }
+cron.schedule('0 9 * * *', () => {
 
-    // client.on('message', (topic, payload) => {
-      
-    //   console.log(payload.toString())
-    //   if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Temp") {
-    //     Temp = payload.toString();
-    //     flag++;
-    //   }
-    //   else if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Humidity") {
-    //     humidity = payload.toString();
-    //     console.log(humidity)
-    //     flag++;
-        
+  client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "ON:100", { qos: 0, retain: false }, (error) => {
+    if (error) {
+      console.error(error)
+    }
+  })
+});
+cron.schedule('0 21 * * *', () => {
+  client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "OFF:0", { qos: 0, retain: false }, (error) => {
+    if (error) {
+      console.error(error)
+    }
+  })
 
-    //   }
-    //   console.log("flag",flag)
+});
 
-    // if (flag==2)
-    // {
-    //   console.log(flag)
-    //   savedata(Temp, humidity)
-    // }
+client.on('message', (topic, payload) => {
 
-    // })
-  
- 
-   
-// 
+  console.log(payload.toString())
+  if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Temp") {
+    Temp = payload.toString();
+    flag++;
+  }
+  else if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Humidity") {
+    humidity = payload.toString();
+    console.log(humidity)
+    flag++;
+
+
+  }
+  console.log("flag", flag)
+
+  // if (flag == 2) {
+  //   console.log(flag)
+  //   savedata(Temp, humidity)
+  // }
+
+})
 
 
 module.exports = client;
