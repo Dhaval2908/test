@@ -35,7 +35,7 @@ app.post("/", encoder, function (req, res) {
     var password = req.body.password;
 
     connection.query("select * from test where username = ? and password = ?", [username, password], function (error, results, fields) {
-        var data
+        console.log(results.toString())
         if (results.length > 0) {
 
             res.redirect("/dashboard")
