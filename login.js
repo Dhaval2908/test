@@ -34,48 +34,83 @@ app.post("/", encoder, function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
 
-    connection.query("select * from test where username = ? and password = ?", [username, password], function (error, results, fields) {
-        
+    connection.query("select * from test where username = ? ", [username], function (error, results, fields) {
+        console.log(results)
+
         if (results.length > 0) {
-
-            res.redirect("/dashboard")
-
-        } else {
-            res.render("index1", {
-                message: "Password Does Not Match"
+            results.forEach(data => {
+                if (data.password == password) {
+                    res.redirect("/dashboard")
+                }
+                else {
+                    res.render("index1", {
+                        message: "Password Does Not Match"
+                    });
+                }
             });
         }
-        res.end();
+        else {
+            res.render("index1", {
+                message: "User Does not exist"
+            });
+        }
+
+
+        // console.log(username)
+        // if (results.length > 0) {
+
+        //     res.redirect("/dashboard")
+
+        // } else {
+        //     res.render("index1", {
+        //         message: "Password Does Not Match"
+        //     });
+        // }
+        // res.end();
     })
 })
 app.post("/test", encoder, function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var repassword = req.body.repassword;
-    if (password == repassword) {
-        connection.query("INSERT INTO test (username, password) VALUES (?, ?);", [username, password], function (error, results, fields) {
-            if (results.length > 0) {
-                res.render("/")
-
-            }
-            else {
-                res.redirect("/");
-
-            }
-            res.end();
-        })
-    }
-    else {
+    connection.query("select * from test where username = ? ", [username], function (error, results, fields) {
+    if(results.length >0)
+    {
         res.render("test", {
-            message: "Password Does Not Match"
-        });
+            message: "User is already exist"
+        }); 
     }
+    else
+    {
+        if (password == repassword) {
+            connection.query("INSERT INTO test (username, password) VALUES (?, ?);", [username, password], function (error, results, fields) {
+                if (results.length > 0) {
+                    res.render("/")
+    
+                }
+                else {
+                    res.redirect("/");
+    
+                }
+                res.end();
+            })
+        }
+        else {
+            res.render("test", {
+                message: "Password Does Not Match"
+            });
+        }
+    }
+
+    })
+    
+    
 
 
 })
 app.get("/dashboard", encoder, function (req, res) {
     var date_ob = new Date();
-    let Temp, humidity, time, date, t2, t3,Fan
+    let Temp, humidity, time, date, t2, t3, Fan
     client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
         if (error) {
             console.error(error)
@@ -98,19 +133,19 @@ app.get("/dashboard", encoder, function (req, res) {
             Fan = "ON"
             console.log(Fan)
             client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
-              if (error) {
-                console.error(error)
-              }
+                if (error) {
+                    console.error(error)
+                }
             })
-          }
-          else {
+        }
+        else {
             Fan = "OFF"
             client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
-              if (error) {
-                console.error(error)
-              }
+                if (error) {
+                    console.error(error)
+                }
             })
-          }
+        }
 
 
 
@@ -148,7 +183,7 @@ app.get("/dashboard", encoder, function (req, res) {
 app.post("/dashboard", encoder, function (req, res) {
     var AirPumpON = req.body.AirPumpON;
     var AirPumpOFF = req.body.AirPumpOFF;
-    
+
     // client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
     //     if (error) {
     //         console.error(error)
