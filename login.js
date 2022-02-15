@@ -4,12 +4,15 @@ const bodyParser = require("body-parser");
 const encoder = bodyParser.urlencoded();
 var path = require('path');
 let alert = require('alert');
-
+// const WebSocket = require('ws');
+// var myWebSocket = new WebSocket("ws://www.websocket.org");
 const app = express();
+var jwt = require('jsonwebtoken');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use("/assets", express.static("assets"));
-
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 const connection = require("./database");
 const client = require("./Mqtt");
 const { time } = require("console");
@@ -40,6 +43,15 @@ app.post("/", encoder, function (req, res) {
         if (results.length > 0) {
             results.forEach(data => {
                 if (data.password == password) {
+                    const token = jwt.sign({
+                        email: data.username,
+                    },'test secret',{expiresIn:'3m'});
+                    // Set session expiration to 3 hr.
+                    console.log(token)
+                const expiresIn = 1*60 * 1000;
+                const options = {maxAge: expiresIn, httpOnly: true};
+                res.cookie('token', token, options);
+                // res.cookie('id', user[0].id, options);
                     res.redirect("/dashboard")
                 }
                 else {
@@ -108,7 +120,7 @@ app.post("/test", encoder, function (req, res) {
 
 
 })
-app.get("/dashboard", encoder, function (req, res) {
+app.get("/dashboard", encoder,isLoggedIn,  function (req, res) {
     var date_ob = new Date();
     let Temp, humidity, time, date, t2, t3, Fan
     client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
@@ -117,8 +129,7 @@ app.get("/dashboard", encoder, function (req, res) {
         }
 
     })
-
-
+   
     client.on('message', (topic, payload) => {
         if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Temp") {
             Temp = payload.toString();
@@ -177,9 +188,11 @@ app.get("/dashboard", encoder, function (req, res) {
     }, 500)
 
 })
+// client.on('message', (topic, payload) => {
 
+// location.reload(true);
 
-
+// })
 app.post("/dashboard", encoder, function (req, res) {
     var AirPumpON = req.body.AirPumpON;
     var AirPumpOFF = req.body.AirPumpOFF;
@@ -218,6 +231,18 @@ app.post("/dashboard", encoder, function (req, res) {
 
 })
 
-
+function isLoggedIn(req, res, next) {   //To verify an incoming token from client
+    try{
+        console.log(req.cookies.token);
+        jwt.verify(req.cookies.token, 'test secret');  
+        return next();
+    }
+    catch(err){
+        console.log(err.message);
+        return res.status(401).render('index1',{  //401 Unauthorized Accesss
+            message: 'Token expired or tampered'
+        });  
+    }
+}
 
 app.listen(2000);
