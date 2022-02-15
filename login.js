@@ -129,7 +129,7 @@ app.get("/dashboard", encoder, function (req, res) {
             console.log(humidity)
 
         }
-        if (Temp > 26) {
+        if (Temp > 25) {
             Fan = "ON"
             console.log(Fan)
             client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
@@ -174,7 +174,7 @@ app.get("/dashboard", encoder, function (req, res) {
             Date: date,
             Fan: Fan
         });
-    }, 100)
+    }, 500)
 
 })
 
