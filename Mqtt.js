@@ -52,7 +52,7 @@ cron.schedule('0 11 * * *', () => {
     }
   })
 });
-cron.schedule('0 24 * * *', () => {
+cron.schedule('0 23 * * *', () => {
   console.log("LIGHT OFF")
   client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "OFF:0", { qos: 0, retain: false }, (error) => {
     if (error) {
