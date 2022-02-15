@@ -232,6 +232,7 @@ app.post("/dashboard", encoder, function (req, res) {
 })
 
 function isLoggedIn(req, res, next) {   //To verify an incoming token from client
+    console.log(req.cookies.token);
     try{
         console.log(req.cookies.token);
         jwt.verify(req.cookies.token, 'test secret');  
@@ -240,7 +241,7 @@ function isLoggedIn(req, res, next) {   //To verify an incoming token from clien
     catch(err){
         console.log(err.message);
         return res.status(401).render('index1',{  //401 Unauthorized Accesss
-            message: 'Token expired or tampered'
+            message: 'Please Login Again'
         });  
     }
 }
