@@ -2,20 +2,24 @@ const mysql = require("mysql");
 const express = require("express");
 const bodyParser = require("body-parser");
 const encoder = bodyParser.urlencoded();
+const logger = require("morgan")
 var path = require('path');
-let alert = require('alert');
-// const WebSocket = require('ws');
-// var myWebSocket = new WebSocket("ws://www.websocket.org");
+var cookieParser = require('cookie-parser');
 const app = express();
 var jwt = require('jsonwebtoken');
+
+app.use(bodyParser.json());
+app.use(logger("dev"))
+app.use(bodyParser.urlencoded({ extended: false }))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use("/assets", express.static("assets"));
-var cookieParser = require('cookie-parser');
 app.use(cookieParser());
+
+
 const connection = require("./database");
 const client = require("./Mqtt");
-const { time } = require("console");
+
 
 app.get("/", function (req, res) {
     res.redirect('/index1');
@@ -33,7 +37,7 @@ app.get('/index1', (req, res) => {
 });
 
 
-app.post("/", encoder, function (req, res) {
+app.post("/", function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
 
@@ -68,20 +72,10 @@ app.post("/", encoder, function (req, res) {
         }
 
 
-        // console.log(username)
-        // if (results.length > 0) {
-
-        //     res.redirect("/dashboard")
-
-        // } else {
-        //     res.render("index1", {
-        //         message: "Password Does Not Match"
-        //     });
-        // }
-        // res.end();
+       
     })
 })
-app.post("/test", encoder, function (req, res) {
+app.post("/test",  function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var repassword = req.body.repassword;
@@ -120,7 +114,7 @@ app.post("/test", encoder, function (req, res) {
 
 
 })
-app.get("/dashboard", encoder,isLoggedIn,  function (req, res) {
+app.get("/dashboard",isLoggedIn,  function (req, res) {
     var date_ob = new Date();
     let Temp, humidity, time, date, t2, t3, Fan
     client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
