@@ -44,7 +44,8 @@ function getdata() {
   })
 
 }
-cron.schedule('0 11 * * *', () => {
+var l="50"
+cron.schedule('55 17 * * *', () => {
   console.log("LIGHT ON")
   client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "ON:100", { qos: 0, retain: false }, (error) => {
     if (error) {
@@ -52,7 +53,8 @@ cron.schedule('0 11 * * *', () => {
     }
   })
 });
-cron.schedule('0 23 * * *', () => {
+
+cron.schedule('21 11 * * *', () => {
   console.log("LIGHT OFF")
   client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "OFF:0", { qos: 0, retain: false }, (error) => {
     if (error) {

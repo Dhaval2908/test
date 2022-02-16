@@ -48,7 +48,7 @@ app.post("/", encoder, function (req, res) {
                     },'test secret',{expiresIn:'3m'});
                     // Set session expiration to 3 hr.
                     console.log(token)
-                const expiresIn = 1*60 * 1000;
+                const expiresIn = 1 * 60 * 60 * 1000;
                 const options = {maxAge: expiresIn, httpOnly: true};
                 res.cookie('token', token, options);
                 // res.cookie('id', user[0].id, options);
@@ -143,7 +143,7 @@ app.get("/dashboard", encoder,isLoggedIn,  function (req, res) {
         if (Temp > 25) {
             Fan = "ON"
             console.log(Fan)
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "ON:100", { qos: 0, retain: false }, (error) => {
                 if (error) {
                     console.error(error)
                 }
@@ -151,7 +151,7 @@ app.get("/dashboard", encoder,isLoggedIn,  function (req, res) {
         }
         else {
             Fan = "OFF"
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "OFF:0", { qos: 0, retain: false }, (error) => {
                 if (error) {
                     console.error(error)
                 }
@@ -207,7 +207,7 @@ app.post("/dashboard", encoder, function (req, res) {
         console.log(AirPumpON)
         if (AirPumpON) {
             console.log("t")
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "ON:100", { qos: 0, retain: false }, (error) => {
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
                 if (error) {
                     console.error(error)
                 }
@@ -216,7 +216,7 @@ app.post("/dashboard", encoder, function (req, res) {
 
         }
         if (AirPumpOFF) {
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "OFF:0", { qos: 0, retain: false }, (error) => {
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
                 if (error) {
                     console.error(error)
                 }
