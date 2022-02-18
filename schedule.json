@@ -16,5 +16,11 @@
     "StartMin": "07",
     "EndHr": "11",
     "EndMin": "08"
+  },
+  {
+    "StartHr": "15",
+    "StartMin": "53",
+    "EndHr": "15",
+    "EndMin": "54"
   }
 ]
