@@ -7,6 +7,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 const app = express();
 var jwt = require('jsonwebtoken');
+var fs = require('fs');
 
 app.use(bodyParser.json());
 app.use(logger("dev"))
