@@ -35,15 +35,11 @@ app.get('/index1', (req, res) => {
         message: ''
     });
 });
-
-
 app.post("/", function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
-
     connection.query("select * from test where username = ? ", [username], function (error, results, fields) {
         console.log(results)
-
         if (results.length > 0) {
             results.forEach(data => {
                 if (data.password == password) {
@@ -69,10 +65,7 @@ app.post("/", function (req, res) {
             res.render("index1", {
                 message: "User Does not exist"
             });
-        }
-
-
-       
+        }       
     })
 })
 app.post("/test",  function (req, res) {
@@ -107,12 +100,7 @@ app.post("/test",  function (req, res) {
             });
         }
     }
-
     })
-    
-    
-
-
 })
 app.get("/dashboard",isLoggedIn,  function (req, res) {
     var date_ob = new Date();
@@ -123,7 +111,6 @@ app.get("/dashboard",isLoggedIn,  function (req, res) {
         }
 
     })
-   
     client.on('message', (topic, payload) => {
         if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Temp") {
             Temp = payload.toString();
@@ -151,9 +138,6 @@ app.get("/dashboard",isLoggedIn,  function (req, res) {
                 }
             })
         }
-
-
-
         let day = ("0" + date_ob.getDate()).slice(-2);
         let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
         let minute = String(date_ob.getMinutes()).padStart(2, '0');
@@ -163,11 +147,7 @@ app.get("/dashboard",isLoggedIn,  function (req, res) {
         console.log(date)
         t2 = "53"
         t3 = "54"
-
-
     })
-
-
     setTimeout(function () {
 
         res.render("dashboard", {
@@ -182,21 +162,11 @@ app.get("/dashboard",isLoggedIn,  function (req, res) {
     }, 500)
 
 })
-// client.on('message', (topic, payload) => {
 
-// location.reload(true);
-
-// })
 app.post("/dashboard", encoder, function (req, res) {
     var AirPumpON = req.body.AirPumpON;
     var AirPumpOFF = req.body.AirPumpOFF;
 
-    // client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
-    //     if (error) {
-    //         console.error(error)
-    //     }
-
-    // })
     setTimeout(function () {
         console.log(AirPumpON)
         if (AirPumpON) {
@@ -207,7 +177,6 @@ app.post("/dashboard", encoder, function (req, res) {
                 }
             })
             res.redirect("/dashboard")
-
         }
         if (AirPumpOFF) {
             client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
@@ -218,11 +187,69 @@ app.post("/dashboard", encoder, function (req, res) {
             res.redirect("/dashboard")
 
         }
-
     }, 500);
 
+})
 
+app.get("/schedule", isLoggedIn, function (req, res) {
+    const fileData = fs.readFileSync("schedule.json", 'utf8');
+    console.log("LEngth", fileData.length)
+    const object = JSON.parse(fileData)
+    res.render("schedule", {
+        ScheduleData: object
+    });
 
+})
+
+app.post("/schedule", isLoggedIn, function (req, res) {
+    StartTime = req.body.starttime
+    EndTime = req.body.endtime
+    StartTime = StartTime.split(":");
+    EndTime = EndTime.split(":");
+    valid = parseInt(StartTime[0]) + parseInt(StartTime[1]) - parseInt(EndTime[0]) - parseInt(EndTime[1])
+    console.log("Valid:", valid)
+    if (valid >= 0) {
+        console.log("ERROR")
+    }
+    var date_ob = new Date();
+    let minute = String(date_ob.getMinutes()).padStart(2, '0');
+    time = date_ob.getHours() + ':' + minute;
+    const fileData = fs.readFileSync("schedule.json", 'utf8');
+    const object = JSON.parse(fileData)
+    if (object.length === 0) {
+
+        fs.writeFileSync("schedule.json", JSON.stringify([{ StartHr: StartTime[0], StartMin: StartTime[1], EndHr: EndTime[0], EndMin: EndTime[1] }], null, 2))
+    } else {
+
+        object.push({ StartHr: StartTime[0], StartMin: StartTime[1], EndHr: EndTime[0], EndMin: EndTime[1] })
+        fs.writeFileSync("schedule.json", JSON.stringify(object, null, 2))
+
+    }
+    // obj.table.push({StartTime:StartTime,EndTime:EndTime})
+
+    // fs.appendFileSync('schedule.json', JSON.stringify(obj)  ,(err) => {
+    //     if (err)
+    //       console.log(err);
+    //     else {
+    //       console.log("File written successfully\n");
+    //       console.log("The written has the following contents:");
+
+    //     }
+    // })
+    // setTimeout(function () {
+    //     res.render("schedule",{
+    //         ScheduleData:object
+    //     });
+    // }, 500);
+    res.redirect("/schedule")
+})
+app.post("/delete", isLoggedIn, function (req, res) {
+    const fileData = fs.readFileSync(`schedule.json`, 'utf8');
+    const object = JSON.parse(fileData)
+    index = object.findIndex(object => object.StartHr == req.query.StartHr && object.StartMin == req.query.StartMin)
+    object.splice(index, 1)
+    fs.writeFileSync("schedule.json", JSON.stringify(object, null, 2))
+    res.redirect("/schedule")
 })
 
 function isLoggedIn(req, res, next) {   //To verify an incoming token from client
