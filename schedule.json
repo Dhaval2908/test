@@ -1,0 +1,20 @@
+[
+  {
+    "StartHr": "11",
+    "StartMin": "04",
+    "EndHr": "11",
+    "EndMin": "05"
+  },
+  {
+    "StartHr": "11",
+    "StartMin": "06",
+    "EndHr": "11",
+    "EndMin": "10"
+  },
+  {
+    "StartHr": "11",
+    "StartMin": "07",
+    "EndHr": "11",
+    "EndMin": "08"
+  }
+]
