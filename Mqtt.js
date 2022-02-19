@@ -24,6 +24,9 @@ client.on('connect', () => {
   client.subscribe("REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Humidity", () => {
     console.log(`Subscribe to topic '${topic}'`)
   })
+  client.subscribe("TEST", () => {
+    console.log(`Subscribe to topic '${topic}'`)
+  })
 })
 
 var flag = 0
@@ -44,25 +47,8 @@ function getdata() {
   })
 
 }
-var l="50"
-cron.schedule('55 17 * * *', () => {
-  console.log("LIGHT ON")
-  client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "ON:100", { qos: 0, retain: false }, (error) => {
-    if (error) {
-      console.error(error)
-    }
-  })
-});
 
-cron.schedule('21 11 * * *', () => {
-  console.log("LIGHT OFF")
-  client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "OFF:0", { qos: 0, retain: false }, (error) => {
-    if (error) {
-      console.error(error)
-    }
-  })
 
-});
 
 client.on('message', (topic, payload) => {
 

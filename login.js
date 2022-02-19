@@ -9,6 +9,7 @@ const app = express();
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 const schedule = require("./schedule")
+
 app.use(bodyParser.json());
 app.use(logger("dev"))
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -20,6 +21,8 @@ app.use(cookieParser());
 
 const connection = require("./database");
 const client = require("./Mqtt");
+const test = require("./schedule");
+
 
 
 app.get("/", function (req, res) {
@@ -46,7 +49,7 @@ app.post("/", function (req, res) {
                 if (data.password == password) {
                     const token = jwt.sign({
                         email: data.username,
-                    },'test secret',{expiresIn:'3m'});
+                    },'test secret',{expiresIn:'1h'});
                     // Set session expiration to 3 hr.
                     console.log(token)
                 const expiresIn = 1 * 60 * 60 * 1000;
@@ -194,12 +197,13 @@ app.post("/dashboard", encoder, function (req, res) {
 
 app.get("/schedule", isLoggedIn, function (req, res) {
     const fileData = fs.readFileSync("schedule.json", 'utf8');
-    console.log("LEngth", fileData.length)
+    console.log("Length", fileData.length)
     const object = JSON.parse(fileData)
+    
     res.render("schedule", {
         ScheduleData: object
     });
-
+   
 })
 
 app.post("/schedule", isLoggedIn, function (req, res) {
@@ -220,12 +224,24 @@ app.post("/schedule", isLoggedIn, function (req, res) {
     if (object.length === 0) {
 
         fs.writeFileSync("schedule.json", JSON.stringify([{ StartHr: StartTime[0], StartMin: StartTime[1], EndHr: EndTime[0], EndMin: EndTime[1] }], null, 2))
+        client.publish("TEST", "1", { qos: 0, retain: false }, (error) => {
+            if (error) {
+              console.error(error)
+            }
+          })
     } else {
 
         object.push({ StartHr: StartTime[0], StartMin: StartTime[1], EndHr: EndTime[0], EndMin: EndTime[1] })
         fs.writeFileSync("schedule.json", JSON.stringify(object, null, 2))
+        client.publish("TEST", "1", { qos: 0, retain: false }, (error) => {
+            if (error) {
+              console.error(error)
+            }
+          })
+        
 
     }
+    
     // obj.table.push({StartTime:StartTime,EndTime:EndTime})
 
     // fs.appendFileSync('schedule.json', JSON.stringify(obj)  ,(err) => {
@@ -244,6 +260,13 @@ app.post("/schedule", isLoggedIn, function (req, res) {
     // }, 500);
     res.redirect("/schedule")
 })
+client.on('message', (topic, payload) => {
+  if(topic === "TEST")
+  {
+      console.log("AA gaya")
+      test()
+  }
+  })
 app.post("/delete", isLoggedIn, function (req, res) {
     const fileData = fs.readFileSync(`schedule.json`, 'utf8');
     const object = JSON.parse(fileData)

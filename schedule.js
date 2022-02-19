@@ -1,7 +1,10 @@
 var schedule = require("node-schedule");
 var fs = require('fs');
-const fileData = fs.readFileSync("schedule.json", 'utf8');
 var client = require("./Mqtt")
+function test()
+{
+  const fileData = fs.readFileSync("schedule.json", 'utf8');
+
 console.log(fileData)
 if(fileData.length >0)  
 {
@@ -28,4 +31,7 @@ if(fileData.length >0)
   });
   
 }  
+}
+
      
+module.exports = test;
