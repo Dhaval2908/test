@@ -26,16 +26,16 @@ const test = require("./schedule");
 
 
 
-app.get("/", function (req, res) {
+app.get("/",LOGIN, function (req, res) {
     res.redirect('/index1');
 })
 
-app.get('/test', (req, res) => {
+app.get('/test',LOGIN, (req, res) => {
     res.render('test', {
         message: ''
     });
 });
-app.get('/index1', (req, res) => {
+app.get('/index1',LOGIN, (req, res) => {
     res.render('index1', {
         message: ''
     });
@@ -283,6 +283,20 @@ function isLoggedIn(req, res, next) {   //To verify an incoming token from clien
         console.log(req.cookies.token);
         jwt.verify(req.cookies.token, 'test secret');  
         return next();
+    }
+    catch(err){
+        console.log(err.message);
+        return res.status(401).render('index1',{  //401 Unauthorized Accesss
+            message: 'Please Login Again'
+        });  
+    }
+}
+function LOGIN(req, res, next) {   //To verify an incoming token from client
+    console.log(req.cookies.token);
+    try{
+        console.log(req.cookies.token);
+        jwt.verify(req.cookies.token, 'test secret');  
+        return res.redirect("/dashboard");
     }
     catch(err){
         console.log(err.message);
