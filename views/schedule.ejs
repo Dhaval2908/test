@@ -40,15 +40,15 @@
               <label class="block uppercase tracking-wide text-white text-xs font-bold mb-2">
                 Start Time:
               </label>
-              <input type="time" name="starttime" required
-                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+              <input type="time" name="starttime" required step="1"
+                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
             </div>
             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label class="block uppercase tracking-wide text-white text-xs font-bold mb-2 ">
                 End Time:
               </label>
-              <input type="time" name="endtime" required
-                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+              <input type="time" name="endtime" required step="1"
+                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
             </div>
             <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
               <label class="block uppercase tracking-wide text-white text-xs font-bold mb-2 py-2">
@@ -94,10 +94,10 @@
                             <%=i%>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">
-                            <%=data.StartHr %>:<%=data.StartMin %>
+                            <%=data.StartHr %>:<%=data.StartMin %>:<%=data.StartSec %>
                           </td>
                           <td class="px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">
-                            <%=data.EndHr %>:<%=data.EndMin %>
+                            <%=data.EndHr %>:<%=data.EndMin %>:<%=data.EndSec %>
                           </td>
                           <td class=" px-6 py-4 whitespace-nowrap text-base font-medium text-gray-900">
                             <form action="/delete?StartHr=<%=data.StartHr %>&StartMin=<%=data.StartMin %>"

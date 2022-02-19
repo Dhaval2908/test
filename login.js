@@ -10,6 +10,7 @@ var jwt = require('jsonwebtoken');
 var fs = require('fs');
 const schedule = require("./schedule")
 
+
 app.use(bodyParser.json());
 app.use(logger("dev"))
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -205,7 +206,7 @@ app.get("/schedule", isLoggedIn, function (req, res) {
     });
    
 })
-
+test()
 app.post("/schedule", isLoggedIn, function (req, res) {
     StartTime = req.body.starttime
     EndTime = req.body.endtime
@@ -223,7 +224,7 @@ app.post("/schedule", isLoggedIn, function (req, res) {
     const object = JSON.parse(fileData)
     if (object.length === 0) {
 
-        fs.writeFileSync("schedule.json", JSON.stringify([{ StartHr: StartTime[0], StartMin: StartTime[1], EndHr: EndTime[0], EndMin: EndTime[1] }], null, 2))
+        fs.writeFileSync("schedule.json", JSON.stringify([{ StartHr: StartTime[0], StartMin: StartTime[1],StartSec:StartTime[2], EndHr: EndTime[0], EndMin: EndTime[1] ,EndSec:EndTime[2]}], null, 2))
         client.publish("TEST", "1", { qos: 0, retain: false }, (error) => {
             if (error) {
               console.error(error)
@@ -231,7 +232,7 @@ app.post("/schedule", isLoggedIn, function (req, res) {
           })
     } else {
 
-        object.push({ StartHr: StartTime[0], StartMin: StartTime[1], EndHr: EndTime[0], EndMin: EndTime[1] })
+        object.push({ StartHr: StartTime[0], StartMin: StartTime[1],StartSec:StartTime[2], EndHr: EndTime[0], EndMin: EndTime[1] ,EndSec:EndTime[2]})
         fs.writeFileSync("schedule.json", JSON.stringify(object, null, 2))
         client.publish("TEST", "1", { qos: 0, retain: false }, (error) => {
             if (error) {

@@ -1,26 +1,18 @@
 [
   {
-    "StartHr": "12",
-    "StartMin": "42",
-    "EndHr": "12",
-    "EndMin": "43"
+    "StartHr": "14",
+    "StartMin": "12",
+    "StartSec": "30",
+    "EndHr": "14",
+    "EndMin": "12",
+    "EndSec": "57"
   },
   {
-    "StartHr": "12",
-    "StartMin": "44",
-    "EndHr": "12",
-    "EndMin": "45"
-  },
-  {
-    "StartHr": "12",
-    "StartMin": "46",
-    "EndHr": "12",
-    "EndMin": "47"
-  },
-  {
-    "StartHr": "12",
-    "StartMin": "48",
-    "EndHr": "12",
-    "EndMin": "49"
+    "StartHr": "14",
+    "StartMin": "13",
+    "StartSec": "30",
+    "EndHr": "14",
+    "EndMin": "14",
+    "EndSec": "10"
   }
 ]
