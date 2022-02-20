@@ -1,18 +1,10 @@
 [
   {
-    "StartHr": "14",
-    "StartMin": "12",
-    "StartSec": "30",
-    "EndHr": "14",
-    "EndMin": "12",
-    "EndSec": "57"
-  },
-  {
-    "StartHr": "14",
-    "StartMin": "13",
-    "StartSec": "30",
-    "EndHr": "14",
-    "EndMin": "14",
-    "EndSec": "10"
+    "StartHr": "13",
+    "StartMin": "34",
+    "StartSec": "47",
+    "EndHr": "13",
+    "EndMin": "27",
+    "EndSec": "50"
   }
 ]

@@ -40,6 +40,7 @@ app.get('/index1',LOGIN, (req, res) => {
         message: ''
     });
 });
+// var tokenname="token"
 app.post("/", function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
@@ -196,6 +197,16 @@ app.post("/dashboard", encoder, function (req, res) {
 
 })
 
+app.get('/logout', function(req,res){
+    // localStorage.removeItem(req.cookies.token)
+    return res
+    .clearCookie('token')
+    .status(200)
+    .redirect("/");
+   
+   
+    
+   });
 app.get("/schedule", isLoggedIn, function (req, res) {
     const fileData = fs.readFileSync("schedule.json", 'utf8');
     console.log("Length", fileData.length)
@@ -301,7 +312,7 @@ function LOGIN(req, res, next) {   //To verify an incoming token from client
     catch(err){
         console.log(err.message);
         return res.status(401).render('index1',{  //401 Unauthorized Accesss
-            message: 'Please Login Again'
+            message: ''
         });  
     }
 }
