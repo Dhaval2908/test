@@ -104,11 +104,11 @@ function savedata(Temp, humidity, Pump) {
   }
   //Temp="22.0"
   console.log(Fan)
-  var sql = "INSERT INTO data (Temp,Humidity,EC,PH,Time,Date,Fan) VALUES (?,?,?,?,?,?,?);"
-  con.query(sql, [Temp, humidity, t2, t3, time, date, Fan], function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  });
+  // var sql = "INSERT INTO data (Temp,Humidity,EC,PH,Time,Date,Fan) VALUES (?,?,?,?,?,?,?);"
+  // con.query(sql, [Temp, humidity, t2, t3, time, date, Fan], function (err, result) {
+  //   if (err) throw err;
+  //   console.log("1 record inserted");
+  // });
 
   // const fileData = fs.readFileSync("data.json", 'utf8');
   // const object = JSON.parse(fileData)
