@@ -26,16 +26,16 @@ const test = require("./schedule");
 
 
 
-app.get("/",LOGIN, function (req, res) {
+app.get("/", LOGIN, function (req, res) {
     res.redirect('/index1');
 })
 
-app.get('/test',LOGIN, (req, res) => {
+app.get('/test', LOGIN, (req, res) => {
     res.render('test', {
         message: ''
     });
 });
-app.get('/index1',LOGIN, (req, res) => {
+app.get('/index1', LOGIN, (req, res) => {
     res.render('index1', {
         message: ''
     });
@@ -51,13 +51,13 @@ app.post("/", function (req, res) {
                 if (data.password == password) {
                     const token = jwt.sign({
                         email: data.username,
-                    },'test secret',{expiresIn:'1h'});
+                    }, 'test secret', { expiresIn: '1h' });
                     // Set session expiration to 3 hr.
                     console.log(token)
-                const expiresIn = 1 * 60 * 60 * 1000;
-                const options = {maxAge: expiresIn, httpOnly: true};
-                res.cookie('token', token, options);
-                // res.cookie('id', user[0].id, options);
+                    const expiresIn = 1 * 60 * 60 * 1000;
+                    const options = { maxAge: expiresIn, httpOnly: true };
+                    res.cookie('token', token, options);
+                    // res.cookie('id', user[0].id, options);
                     res.redirect("/dashboard")
                 }
                 else {
@@ -71,151 +71,131 @@ app.post("/", function (req, res) {
             res.render("index1", {
                 message: "User Does not exist"
             });
-        }       
+        }
     })
 })
-app.post("/test",  function (req, res) {
+app.post("/test", function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var repassword = req.body.repassword;
     connection.query("select * from test where username = ? ", [username], function (error, results, fields) {
-    if(results.length >0)
-    {
-        res.render("test", {
-            message: "User is already exist"
-        }); 
-    }
-    else
-    {
-        if (password == repassword) {
-            connection.query("INSERT INTO test (username, password) VALUES (?, ?);", [username, password], function (error, results, fields) {
-                if (results.length > 0) {
-                    res.render("/")
-    
-                }
-                else {
-                    res.redirect("/");
-    
-                }
-                res.end();
-            })
-        }
-        else {
+        if (results.length > 0) {
             res.render("test", {
-                message: "Password Does Not Match"
+                message: "User is already exist"
             });
         }
-    }
+        else {
+            if (password == repassword) {
+                connection.query("INSERT INTO test (username, password) VALUES (?, ?);", [username, password], function (error, results, fields) {
+                    if (results.length > 0) {
+                        res.render("/")
+
+                    }
+                    else {
+                        res.redirect("/");
+
+                    }
+                    res.end();
+                })
+            }
+            else {
+                res.render("test", {
+                    message: "Password Does Not Match"
+                });
+            }
+        }
     })
 })
-app.get("/dashboard",isLoggedIn,  function (req, res) {
-    var date_ob = new Date();
-    let Temp, humidity, time, date, t2, t3, Fan
+app.get("/dashboard", isLoggedIn, function (req, res) {
     client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
         if (error) {
             console.error(error)
         }
 
-    })
-    client.on('message', (topic, payload) => {
-        if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Temp") {
-            Temp = payload.toString();
-
-        }
-        else if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Humidity") {
-            humidity = payload.toString();
-            console.log(humidity)
-
-        }
-        if (Temp > 25) {
-            Fan = "ON"
-            console.log(Fan)
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "ON:100", { qos: 0, retain: false }, (error) => {
-                if (error) {
-                    console.error(error)
-                }
-            })
-        }
-        else {
-            Fan = "OFF"
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "OFF:0", { qos: 0, retain: false }, (error) => {
-                if (error) {
-                    console.error(error)
-                }
-            })
-        }
-        let day = ("0" + date_ob.getDate()).slice(-2);
-        let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-        let minute = String(date_ob.getMinutes()).padStart(2, '0');
-        time = date_ob.getHours() + ':' + minute + ':' + date_ob.getSeconds();
-        date = date_ob.getFullYear() + '/' + month + '/' + day;
-        console.log(time)
-        console.log(date)
-        t2 = "53"
-        t3 = "54"
-    })
-    setTimeout(function () {
-
+    }) 
+    setTimeout(() => {
+        const data = fs.readFileSync("data.json", 'utf8');
+        const DATA = JSON.parse(data)
+        const fileData = fs.readFileSync("status.json", 'utf8');
+        const object = JSON.parse(fileData)
+        console.log(DATA)
         res.render("dashboard", {
-            Temp: Temp,
-            Humidity: humidity,
-            PH: t2,
-            EC: t3,
-            Time: time,
-            Date: date,
-            Fan: Fan
+            Data : DATA,
+            Status: object
         });
-    }, 500)
-
+    }, 100);
+        
+   
 })
 
 app.post("/dashboard", encoder, function (req, res) {
-    var AirPumpON = req.body.AirPumpON;
-    var AirPumpOFF = req.body.AirPumpOFF;
+    var AirPump = req.body.AirPump;
+    
+    
+    client.publish("REEVA/HYDROPHONICS/34B4724F22C4/Action", "1", { qos: 0, retain: false }, (error) => {
+        if (error) {
+            console.error(error)
+        }
 
-    setTimeout(function () {
-        console.log(AirPumpON)
-        if (AirPumpON) {
-            console.log("t")
+    })      
+        console.log("PUMP STATUS :",req.body.AirPump)
+        if(AirPump=="ON")
+        {
+           
             client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
+                
                 if (error) {
                     console.error(error)
                 }
             })
-            res.redirect("/dashboard")
+            const fileData = fs.readFileSync("status.json", 'utf8');
+            const object = JSON.parse(fileData)
+            fs.writeFileSync("status.json", JSON.stringify({ Pump: "ON" }, null, 2))
         }
-        if (AirPumpOFF) {
+        if(AirPump=="OFF")
+        {
+           
             client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
+                
                 if (error) {
                     console.error(error)
                 }
             })
-            res.redirect("/dashboard")
-
+            const fileData = fs.readFileSync("status.json", 'utf8');
+            const object = JSON.parse(fileData)
+            fs.writeFileSync("status.json", JSON.stringify({ Pump: "OFF" }, null, 2))
         }
-    }, 500);
+       
+        setTimeout(() => {
+        const data = fs.readFileSync("data.json", 'utf8');
+        const DATA = JSON.parse(data)
+        const fileData = fs.readFileSync("status.json", 'utf8');
+        const object = JSON.parse(fileData)
+        res.render("dashboard", {
+            Data : DATA,
+            Status: object
+        });
+        }, 500);
+        
+    
 
 })
 
-app.get('/logout', function(req,res){
+app.get('/logout', function (req, res) {
     // localStorage.removeItem(req.cookies.token)
     return res
-    .clearCookie('token')
-    .status(200)
-    .redirect("/");
-   
-   
-    
-   });
+        .clearCookie('token')
+        .status(200)
+        .redirect("/");
+});
 app.get("/schedule", isLoggedIn, function (req, res) {
     const fileData = fs.readFileSync("schedule.json", 'utf8');
     console.log("Length", fileData.length)
     const object = JSON.parse(fileData)
-    
+
     res.render("schedule", {
         ScheduleData: object
     });
-   
 })
 test()
 app.post("/schedule", isLoggedIn, function (req, res) {
@@ -235,50 +215,32 @@ app.post("/schedule", isLoggedIn, function (req, res) {
     const object = JSON.parse(fileData)
     if (object.length === 0) {
 
-        fs.writeFileSync("schedule.json", JSON.stringify([{ StartHr: StartTime[0], StartMin: StartTime[1],StartSec:StartTime[2], EndHr: EndTime[0], EndMin: EndTime[1] ,EndSec:EndTime[2]}], null, 2))
+        fs.writeFileSync("schedule.json", JSON.stringify([{ StartHr: StartTime[0], StartMin: StartTime[1], StartSec: StartTime[2], EndHr: EndTime[0], EndMin: EndTime[1], EndSec: EndTime[2] }], null, 2))
         client.publish("TEST", "1", { qos: 0, retain: false }, (error) => {
             if (error) {
-              console.error(error)
+                console.error(error)
             }
-          })
+        })
     } else {
 
-        object.push({ StartHr: StartTime[0], StartMin: StartTime[1],StartSec:StartTime[2], EndHr: EndTime[0], EndMin: EndTime[1] ,EndSec:EndTime[2]})
+        object.push({ StartHr: StartTime[0], StartMin: StartTime[1], StartSec: StartTime[2], EndHr: EndTime[0], EndMin: EndTime[1], EndSec: EndTime[2] })
         fs.writeFileSync("schedule.json", JSON.stringify(object, null, 2))
         client.publish("TEST", "1", { qos: 0, retain: false }, (error) => {
             if (error) {
-              console.error(error)
+                console.error(error)
             }
-          })
-        
+        })
+
 
     }
-    
-    // obj.table.push({StartTime:StartTime,EndTime:EndTime})
-
-    // fs.appendFileSync('schedule.json', JSON.stringify(obj)  ,(err) => {
-    //     if (err)
-    //       console.log(err);
-    //     else {
-    //       console.log("File written successfully\n");
-    //       console.log("The written has the following contents:");
-
-    //     }
-    // })
-    // setTimeout(function () {
-    //     res.render("schedule",{
-    //         ScheduleData:object
-    //     });
-    // }, 500);
     res.redirect("/schedule")
 })
 client.on('message', (topic, payload) => {
-  if(topic === "TEST")
-  {
-      console.log("AA gaya")
-      test()
-  }
-  })
+    if (topic === "TEST") {
+        console.log("AA gaya")
+        test()
+    }
+})
 app.post("/delete", isLoggedIn, function (req, res) {
     const fileData = fs.readFileSync(`schedule.json`, 'utf8');
     const object = JSON.parse(fileData)
@@ -290,31 +252,30 @@ app.post("/delete", isLoggedIn, function (req, res) {
 
 function isLoggedIn(req, res, next) {   //To verify an incoming token from client
     console.log(req.cookies.token);
-    try{
+    try {
         console.log(req.cookies.token);
-        jwt.verify(req.cookies.token, 'test secret');  
+        jwt.verify(req.cookies.token, 'test secret');
         return next();
     }
-    catch(err){
+    catch (err) {
         console.log(err.message);
-        return res.status(401).render('index1',{  //401 Unauthorized Accesss
+        return res.status(401).render('index1', {  //401 Unauthorized Accesss
             message: 'Please Login Again'
-        });  
+        });
     }
 }
 function LOGIN(req, res, next) {   //To verify an incoming token from client
     console.log(req.cookies.token);
-    try{
+    try {
         console.log(req.cookies.token);
-        jwt.verify(req.cookies.token, 'test secret');  
+        jwt.verify(req.cookies.token, 'test secret');
         return res.redirect("/dashboard");
     }
-    catch(err){
+    catch (err) {
         console.log(err.message);
-        return res.status(401).render('index1',{  //401 Unauthorized Accesss
+        return res.status(401).render('index1', {  //401 Unauthorized Accesss
             message: ''
-        });  
+        });
     }
 }
-
 app.listen(2000);
