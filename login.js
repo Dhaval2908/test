@@ -53,7 +53,6 @@ app.post("/", function (req, res) {
                         email: data.username,
                     }, 'test secret', { expiresIn: '1h' });
                     // Set session expiration to 3 hr.
-                    console.log(token)
                     const expiresIn = 1 * 60 * 60 * 1000;
                     const options = { maxAge: expiresIn, httpOnly: true };
                     res.cookie('token', token, options);
@@ -118,7 +117,6 @@ app.get("/dashboard", isLoggedIn, function (req, res) {
         const DATA = JSON.parse(data)
         const fileData = fs.readFileSync("status.json", 'utf8');
         const object = JSON.parse(fileData)
-        console.log(DATA)
         res.render("dashboard", {
             Data : DATA,
             Status: object
@@ -138,7 +136,6 @@ app.post("/dashboard", encoder, function (req, res) {
         }
 
     })      
-        console.log("PUMP STATUS :",req.body.AirPump)
         if(AirPump=="ON")
         {
            
@@ -190,7 +187,6 @@ app.get('/logout', function (req, res) {
 });
 app.get("/schedule", isLoggedIn, function (req, res) {
     const fileData = fs.readFileSync("schedule.json", 'utf8');
-    console.log("Length", fileData.length)
     const object = JSON.parse(fileData)
 
     res.render("schedule", {
@@ -203,11 +199,6 @@ app.post("/schedule", isLoggedIn, function (req, res) {
     EndTime = req.body.endtime
     StartTime = StartTime.split(":");
     EndTime = EndTime.split(":");
-    valid = parseInt(StartTime[0]) + parseInt(StartTime[1]) - parseInt(EndTime[0]) - parseInt(EndTime[1])
-    console.log("Valid:", valid)
-    if (valid >= 0) {
-        console.log("ERROR")
-    }
     var date_ob = new Date();
     let minute = String(date_ob.getMinutes()).padStart(2, '0');
     time = date_ob.getHours() + ':' + minute;
@@ -237,7 +228,6 @@ app.post("/schedule", isLoggedIn, function (req, res) {
 })
 client.on('message', (topic, payload) => {
     if (topic === "TEST") {
-        console.log("AA gaya")
         test()
     }
 })
@@ -251,9 +241,9 @@ app.post("/delete", isLoggedIn, function (req, res) {
 })
 
 function isLoggedIn(req, res, next) {   //To verify an incoming token from client
-    console.log(req.cookies.token);
+
     try {
-        console.log(req.cookies.token);
+      
         jwt.verify(req.cookies.token, 'test secret');
         return next();
     }
@@ -265,9 +255,7 @@ function isLoggedIn(req, res, next) {   //To verify an incoming token from clien
     }
 }
 function LOGIN(req, res, next) {   //To verify an incoming token from client
-    console.log(req.cookies.token);
     try {
-        console.log(req.cookies.token);
         jwt.verify(req.cookies.token, 'test secret');
         return res.redirect("/dashboard");
     }

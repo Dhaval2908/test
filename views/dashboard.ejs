@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
-
 <head>
+  <title>HydroPhonics</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/tailwingdcss@^1.0/dist/tailwind.min.css">
@@ -14,13 +14,11 @@
       height: 34px;
       margin-bottom: 5px;
     }
-
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-
     .slider {
       position: absolute;
       cursor: pointer;
@@ -32,7 +30,6 @@
       -webkit-transition: .4s;
       transition: .4s;
     }
-
     .slider:before {
       position: absolute;
       content: "";
@@ -66,10 +63,10 @@
       -webkit-transition: .4s;
       transition: .4s;
     }
-
     input:checked+.slider {
       background-color: #ccc;
     }
+
     input:checked+.slider2 {
       background-color: green;
     }
@@ -84,6 +81,7 @@
       transform: translateX(-26px);
       /* value:"ON" */
     }
+
     input:checked+.slider2:before {
       -webkit-transform: translateX(26px);
       -ms-transform: translateX(26px);
@@ -99,28 +97,31 @@
     .slider.round:before {
       border-radius: 50%;
     }
+
     .slider2.round {
       border-radius: 34px;
     }
 
     .slider2.round:before {
       border-radius: 50%;
+      
     }
-
+    img{
+      height: 75px;
+      width: 75px;
+     
+      background-color: black;
+    }
+    
   </style>
-  
 </head>
-
 <body>
-
   <header class="text-gray-400 bg-gray-900 body-font">
     <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
       <a class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round"
-          stroke-linejoin="round" stroke-width="2" class="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full"
-          viewBox="0 0 24 24">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-        </svg>
+        <div class="col-lg-12 login-key">
+          <img src="https://www.clipartmax.com/png/middle/281-2817115_actually-the-system-with-version-hydroponic-logo-png.png" >
+      </div>
         <span class="ml-3 text-xl">Hydrophonics</span>
       </a>
       <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
@@ -134,10 +135,6 @@
           class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0"
           value="Refresh">
       </form>
-      <!-- <button class="inline-flex items-center bg-gray-800 border-0 py-1 px-3 focus:outline-none hover:bg-gray-700 rounded text-base mt-4 md:mt-0">Refresh
-            
-            </svg>
-          </button> -->
     </div>
   </header>
   <section class="text-gray-400 bg-gray-900 body-font">
@@ -150,7 +147,6 @@
         <div class="flex flex-wrap -m-4 text-center">
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
-
               <h2 class="title-font font-medium text-3xl text-white">
                 <%=data.Temp %>
               </h2>
@@ -159,7 +155,6 @@
           </div>
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
-
               <h2 class="title-font font-medium text-3xl text-white">
                 <%=data.Humidity %>
               </h2>
@@ -168,7 +163,6 @@
           </div>
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
-
               <h2 class="title-font font-medium text-3xl text-white">
                 <%=data.PH %>
               </h2>
@@ -177,7 +171,6 @@
           </div>
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
-
               <h2 class="title-font font-medium text-3xl text-white">
                 <%=data.EC %>
               </h2>
@@ -186,31 +179,25 @@
           </div>
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
-
               <h2 class="title-font font-medium text-3xl text-white">
                 <%=data.Time %>
               </h2>
               <p class="leading-relaxed">Time</p>
             </div>
-
           </div>
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
-
               <h2 class="title-font font-medium text-3xl text-white">
                 <%=data.Date %>
               </h2>
               <p class="leading-relaxed">Date</p>
             </div>
-
           </div>
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
               <div class="font-sans md:font-serif text-white">
-               
-               
                 <form action="dashboard" method="post">
-                  <% if(Status.Pump == "ON"){%>
+                  <% if(Status.Pump=="ON" ){%>
                     <label class="switch">
                       <input name="AirPump" id="switch" type="checkbox" onclick="submit()" value="OFF">
                       <span class="slider round"></span>
@@ -223,21 +210,16 @@
                       <%}%>
                 </form>
                 <h2>Control Air Pump</h2>
-                
               </div>
-
             </div>
-
           </div>
           <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
             <div class="border-2 border-gray-500 px-4 py-6 rounded-lg">
-
               <h2 class="title-font font-medium text-3xl text-white">
                 <%=data.Fan %>
               </h2>
               <p class="leading-relaxed">Fan</p>
             </div>
-
           </div>
         </div>
         <% i++; }) %>
@@ -245,28 +227,24 @@
             <div class="flex flex-wrap -m-4 text-center">
               <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
                 <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
-
                   <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
                   <p class="leading-relaxed">Temperature</p>
                 </div>
               </div>
               <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
                 <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
-
                   <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
                   <p class="leading-relaxed">Humidity</p>
                 </div>
               </div>
               <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
                 <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
-
                   <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
                   <p class="leading-relaxed">PH</p>
                 </div>
               </div>
               <div class="p-4 md:w-1/4 sm:w-1/2 w-full">
                 <div class="border-2 border-gray-800 px-4 py-6 rounded-lg">
-
                   <h2 class="title-font font-medium text-3xl text-white">No data found</h2>
                   <p class="leading-relaxed">EC</p>
                 </div>
@@ -275,8 +253,5 @@
             <% } %>
     </div>
   </section>
-  
-
 </body>
-
 </html>
