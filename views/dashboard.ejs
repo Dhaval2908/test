@@ -107,10 +107,19 @@
       
     }
     img{
-      height: 75px;
-      width: 75px;
      
-      background-color: black;
+      width: 60px;
+    height: 60px;
+    -webkit-border-radius: 80;
+    /* -webkit-background-clip: padding-box; */
+    -moz-border-radius: 80;
+    /* -moz-background-clip: padding; */
+    border-radius: 80px;
+    background-clip: padding-box;
+    margin: 0px 0 0 5px;
+    float: left;
+    background-size: cover;
+    background-position: center center;
     }
     
   </style>
@@ -126,7 +135,7 @@
       </a>
       <nav class="md:ml-auto flex flex-wrap items-center text-base justify-center">
         <a href="schedule" class="mr-5 hover:text-white">Schedule</a>
-        <a class="mr-5 hover:text-white">Analysis</a>
+        <a href="analysis"class="mr-5 hover:text-white">Analysis</a>
         <a href="/logout" class="mr-5 hover:text-white">Log out</a>
         <a class="mr-5 hover:text-white"></a>
       </nav>

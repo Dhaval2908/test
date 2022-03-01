@@ -22,6 +22,9 @@ client.on('connect', () => {
   client.subscribe("REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Temp", () => {
     console.log(`Subscribe to topic '${topic}'`)
   })
+  client.subscribe("TEST", () => {
+    console.log(`Subscribe to topic '${topic}'`)
+  })
   client.subscribe("REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Humidity", () => {
     console.log(`Subscribe to topic '${topic}'`)
   })
@@ -30,7 +33,7 @@ client.on('connect', () => {
 var flag = 0
 var time = 0
 var date = 0
-cron.schedule('0 */5 * * * *', () => {
+cron.schedule(' */1 * * * *', () => {
   console.log("Calling")
   //  '0 */5 * * * *
   getdata();
@@ -49,15 +52,15 @@ function getdata() {
 client.on('message', (topic, payload) => {
   if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Temp") {
     Temp = payload.toString();
+    console.log("TEMP",Temp)
 
   }
   else if (topic === "REEVA/HYDROPHONICS/34B4724F22C4/DHT12/Humidity") {
     humidity = payload.toString();
-
-  }
-  setTimeout(() => {
+    console.log("Humidity",humidity)
     savedata(Temp, humidity)
-  }, 100);
+  }
+;
 })
 
 function savedata(Temp, humidity) {
@@ -75,7 +78,7 @@ function savedata(Temp, humidity) {
   if (Temp > 28) {
     Fan = "ON"
 
-    client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
+    client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "ON:100", { qos: 0, retain: false }, (error) => {
       if (error) {
         console.error(error)
       }
@@ -83,18 +86,21 @@ function savedata(Temp, humidity) {
   }
   else {
     Fan = "OFF"
-    client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
+    client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/1", "OFF:0", { qos: 0, retain: false }, (error) => {
       if (error) {
         console.error(error)
       }
     })
   }
+
+  console.log(time)
   //Temp="22.0"
-  // var sql = "INSERT INTO data (Temp,Humidity,EC,PH,Time,Date,Fan) VALUES (?,?,?,?,?,?,?);"
-  // con.query(sql, [Temp, humidity, t2, t3, time, date, Fan], function (err, result) {
-  //   if (err) throw err;
-  //   console.log("1 record inserted");
-  // });
+  
+  var sql = "INSERT INTO data (Temp,Humidity,EC,PH,Time,Date,Fan) VALUES (?,?,?,?,?,?,?);"
+  con.query(sql, [Temp, humidity, t2, t3, time, date, Fan], function (err, result) {
+    if (err) throw err;
+    console.log("1 record inserted");
+  });
   // const fileData = fs.readFileSync("data.json", 'utf8');
   // const object = JSON.parse(fileData)
   fs.writeFileSync("data.json", JSON.stringify([{ Temp: Temp, Humidity: humidity, EC: t2, PH: t3, Time: time, Date: date, Fan: Fan }], null, 2));

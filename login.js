@@ -121,12 +121,12 @@ app.get("/dashboard", isLoggedIn, function (req, res) {
             Data : DATA,
             Status: object
         });
-    }, 100);
+    }, 500);
         
    
 })
 
-app.post("/dashboard", encoder, function (req, res) {
+app.post("/dashboard", encoder,isLoggedIn ,function (req, res) {
     var AirPump = req.body.AirPump;
     
     
@@ -194,6 +194,7 @@ app.get("/schedule", isLoggedIn, function (req, res) {
     });
 })
 test()
+
 app.post("/schedule", isLoggedIn, function (req, res) {
     StartTime = req.body.starttime
     EndTime = req.body.endtime
@@ -237,9 +238,23 @@ app.post("/delete", isLoggedIn, function (req, res) {
     index = object.findIndex(object => object.StartHr == req.query.StartHr && object.StartMin == req.query.StartMin)
     object.splice(index, 1)
     fs.writeFileSync("schedule.json", JSON.stringify(object, null, 2))
+    client.publish("TEST", "1", { qos: 0, retain: false }, (error) => {
+        if (error) {
+            console.error(error)
+        }
+    })
     res.redirect("/schedule")
 })
-
+app.get("/analysis", isLoggedIn, function (req, res) {
+    
+    connection.query("select * from data", function (error, results, fields) {
+        console.log(results)
+        res.render("analysis",{
+            red :results
+            });
+    })
+    
+})
 function isLoggedIn(req, res, next) {   //To verify an incoming token from client
 
     try {

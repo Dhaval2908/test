@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "StartHr": "17",
+    "StartMin": "52",
+    "StartSec": "40",
+    "EndHr": "17",
+    "EndMin": "54",
+    "EndSec": "41"
+  },
+  {
+    "StartHr": "17",
+    "StartMin": "39",
+    "StartSec": "23",
+    "EndHr": "17",
+    "EndMin": "39",
+    "EndSec": "27"
+  },
+  {
+    "StartHr": "18",
+    "StartMin": "01",
+    "StartSec": "57",
+    "EndHr": "18",
+    "EndMin": "02",
+    "EndSec": "20"
+  },
+  {
+    "StartHr": "10",
+    "StartMin": "33",
+    "StartSec": "47",
+    "EndHr": "10",
+    "EndMin": "33",
+    "EndSec": "54"
+  },
+  {
+    "StartHr": "11",
+    "StartMin": "10",
+    "StartSec": "12",
+    "EndHr": "11",
+    "EndMin": "11",
+    "EndSec": "07"
+  }
+]
