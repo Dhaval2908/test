@@ -9,7 +9,7 @@ const app = express();
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 const schedule = require("./schedule")
-
+const plotly = require('plotly')
 
 app.use(bodyParser.json());
 app.use(logger("dev"))
@@ -139,7 +139,7 @@ app.post("/dashboard", encoder,isLoggedIn ,function (req, res) {
         if(AirPump=="ON")
         {
            
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "ON:100", { qos: 0, retain: false }, (error) => {
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "ON:100", { qos: 0, retain: false }, (error) => {
                 
                 if (error) {
                     console.error(error)
@@ -152,7 +152,7 @@ app.post("/dashboard", encoder,isLoggedIn ,function (req, res) {
         if(AirPump=="OFF")
         {
            
-            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/2", "OFF:0", { qos: 0, retain: false }, (error) => {
+            client.publish("REEVA/HYDROPHONICS/34B472504B4C/C/5", "OFF:0", { qos: 0, retain: false }, (error) => {
                 
                 if (error) {
                     console.error(error)
@@ -248,9 +248,51 @@ app.post("/delete", isLoggedIn, function (req, res) {
 app.get("/analysis", isLoggedIn, function (req, res) {
     
     connection.query("select * from data", function (error, results, fields) {
-        console.log(results)
+        // console.log(results)
+        var Temp = [];
+        var Time = [];
+        var date = [];
+        for(var i in results)
+        {
+            Temp.push([results [i].Temp]);
+            Time.push([results [i].Time]);
+            date.push([results [i].Date])
+
+        }
+        // console.log(Time)
         res.render("analysis",{
-            red :results
+            flag:'0',
+            Temp :'',
+            Time :'',
+            Date :''
+            });
+    })
+    
+})
+app.post("/analysis", isLoggedIn, function (req, res) {
+    var Date = req.body.date.split('-');
+    var Date = Date[0]+'/'+Date[1]+'/'+Date[2]
+    // console.log("DATE",Date)
+    // 2022-03-12
+    // 2022/03/01
+    connection.query("select * from data where Date = ?",[Date], function (error, results, fields) {
+        // console.log(results)
+        var Temp = [];
+        var Time = [];
+        var date = [];
+        for(var i in results)
+        {
+            Temp.push([results [i].Temp]);
+            Time.push([results [i].Time]);
+            date.push([results [i].Date])
+
+        }
+        // console.log(Time)
+        res.render("analysis",{
+            Temp :Temp,
+            Time :Time,
+            Date :date,
+            flag :"1"
             });
     })
     
