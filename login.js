@@ -44,6 +44,7 @@ app.get('/index1', LOGIN, (req, res) => {
 app.post("/", function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
+
     connection.query("select * from test where username = ? ", [username], function (error, results, fields) {
         console.log(results)
         if (results.length > 0) {
