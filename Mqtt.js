@@ -3,7 +3,7 @@ const cron = require('node-cron');
 const con = require('./database.js')
 const fs = require("fs");
 
-const host = '13.235.26.80'
+const host = '13.233.193.235'
 const port = '1883'
 const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
 
